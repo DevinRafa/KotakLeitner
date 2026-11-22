@@ -101,7 +101,7 @@ include 'header.php';
         </div>
         <div class="row">
           <?php if ($ulang > 0): ?>
-            <a class="btn btn-pri" href="belajar.php?deck=<?= $deck_id ?>">Belajar sekarang</a>
+            <a class="btn btn-pri" href="belajar.php?deck=<?= $deck_id ?>&amp;baru=1">Belajar sekarang</a>
           <?php endif; ?>
           <a class="btn btn-sec" href="deck.php?edit=<?= $deck_id ?>#form-deck">Ubah deck</a>
         </div>

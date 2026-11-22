@@ -34,7 +34,12 @@ include 'header.php';
         <?php endif; ?>
       </p>
     </div>
-    <a class="btn btn-pri btn-lg" href="deck.php">Kelola Deck</a>
+    <div class="row">
+      <?php if ($total_ulang > 0): ?>
+        <a class="btn btn-pri btn-lg" href="belajar.php?baru=1">Mulai belajar</a>
+      <?php endif; ?>
+      <a class="btn btn-sec btn-lg" href="deck.php">Kelola Deck</a>
+    </div>
   </div>
 
   <div class="grid g3">
