@@ -1,12 +1,12 @@
 {
-  "functions": {
-    "api/index.php": {
-      "runtime": "vercel-php@0.7.3",
-      "includeFiles": "{*.php,assets/**}"
-    }
-  },
-  "rewrites": [
-    { "source": "/", "destination": "/api/index.php" },
-    { "source": "/:file*.php", "destination": "/api/index.php" }
+  "version": 2,
+  "builds": [
+    { "src": "*.php", "use": "vercel-php@0.7.3" },
+    { "src": "assets/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/", "dest": "/index.php" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
