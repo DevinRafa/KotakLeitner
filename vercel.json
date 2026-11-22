@@ -1,12 +1,12 @@
 {
   "version": 2,
   "builds": [
-    { "src": "*.php", "use": "vercel-php@0.7.3" },
+    { "src": "api/index.php", "use": "vercel-php@0.7.3" },
     { "src": "assets/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
-    { "src": "/", "dest": "/index.php" },
-    { "src": "/(.*)", "dest": "/$1" }
+    { "src": "/", "dest": "/api/index.php?f=index.php" },
+    { "src": "/([A-Za-z0-9_]+\\.php)", "dest": "/api/index.php?f=$1" }
   ]
 }
