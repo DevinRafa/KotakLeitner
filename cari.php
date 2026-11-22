@@ -1,10 +1,13 @@
 <?php
+// Pastikan hanya pengguna yang sudah login yang bisa mengakses halaman ini
 require_once 'cek_login.php';
-$uid = (int)$_SESSION['user_id'];
 
+$uid = (int)$_SESSION['user_id'];
 $kata = isset($_GET['q']) ? trim($_GET['q']) : '';
 $hasil = [];
+$hari_ini = date('Y-m-d'); // Dipakai untuk mengecek jadwal jatuh tempo kartu
 
+// Jalankan pencarian jika kata kunci tidak kosong
 if ($kata != '') {
     $like = mysqli_real_escape_string($conn, addcslashes($kata, '%_'));
     $q = mysqli_query($conn, "SELECT k.*, d.nama AS nama_deck, d.id AS id_deck
@@ -16,7 +19,7 @@ if ($kata != '') {
     }
 }
 
-// Beri tanda kuning pada kata yang dicari
+// Beri tanda kuning (<mark>) pada bagian teks yang cocok dengan kata kunci
 function sorot($teks, $kata) {
     $aman = e($teks);
     if ($kata == '') { return $aman; }
@@ -37,6 +40,7 @@ include 'header.php';
     </div>
   </div>
 
+  <!-- Form pencarian kata kunci dengan metode GET -->
   <form class="row" method="get" action="cari.php" style="flex-wrap:nowrap">
     <input class="input" type="search" name="q" value="<?= e($kata) ?>" placeholder="Ketik kata yang dicari..." aria-label="Kata kunci" autofocus>
     <button class="btn btn-pri" type="submit">Cari</button>
@@ -52,13 +56,22 @@ include 'header.php';
   <div class="empty">
     <img src="assets/img/maskot-cari.svg" alt="" width="160" height="173">
     <h3>Kartu tidak ditemukan</h3>
-    <p class="muted">Tidak ada kartu yang cocok dengan &ldquo;<?= e($kata) ?>&rdquo;. Coba kata kunci lain.</p>
+    <p class="muted">Tidak ada kartu yang cocok dengan “<?= e($kata) ?>”. Coba kata kunci lain.</p>
   </div>
 <?php else: ?>
-  <p class="muted"><b><?= count($hasil) ?></b> kartu ditemukan untuk &ldquo;<?= e($kata) ?>&rdquo;</p>
+  <p class="muted"><b><?= count($hasil) ?></b> kartu ditemukan untuk “<?= e($kata) ?>”</p>
   <div class="tblbox">
     <table class="tbl">
-      <thead><tr><th>Depan</th><th>Belakang</th><th>Deck</th><th>Kotak</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Depan</th>
+          <th>Belakang</th>
+          <th>Deck</th>
+          <th>Kotak</th>
+          <th>Jadwal ulang</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
       <tbody>
         <?php foreach ($hasil as $k): ?>
           <tr>
@@ -66,6 +79,17 @@ include 'header.php';
             <td><?= sorot($k['belakang'], $kata) ?></td>
             <td><a class="link" href="kartu.php?deck=<?= (int)$k['id_deck'] ?>"><?= e($k['nama_deck']) ?></a></td>
             <td><?= badge_kotak($k['kotak']) ?></td>
+            <td>
+              <?php if ($k['jadwal'] <= $hari_ini): ?>
+                <span class="chip warm">Hari ini</span>
+              <?php else: ?>
+                <?= e(date('d/m/Y', strtotime($k['jadwal']))) ?>
+              <?php endif; ?>
+            </td>
+            <td>
+              <!-- Aksi cepat untuk langsung masuk mode belajar deck kartu ini -->
+              <a class="btn btn-sec btn-sm" href="belajar.php?deck=<?= (int)$k['id_deck'] ?>&baru=1">Belajar</a>
+            </td>
           </tr>
         <?php endforeach; ?>
       </tbody>
