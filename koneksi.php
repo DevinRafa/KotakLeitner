@@ -2,29 +2,27 @@
 // Koneksi database + fungsi bantu yang dipakai semua halaman
 
 // Pengaturan database: di komputer lokal memakai nilai bawaan, di hosting dibaca dari environment variable
-$db_host = getenv('DB_HOST') ?: 'localhost';
-$db_user = getenv('DB_USER') ?: 'root';
-$db_pass = getenv('DB_PASS') ?: '';
-$db_nama = getenv('DB_NAME') ?: 'kotakleitner';
-$db_port = (int) (getenv('DB_PORT') ?: 3306);
+$db_host = getenv('DB_HOST') ?: getenv('TIDB_HOST') ?: 'localhost';
+$db_user = getenv('DB_USER') ?: getenv('TIDB_USER') ?: 'root';
+$db_pass = getenv('DB_PASS') ?: getenv('TIDB_PASSWORD') ?: '';
+$db_nama = getenv('DB_NAME') ?: getenv('TIDB_DATABASE') ?: 'kotakleitner';
+$db_port = (int) (getenv('DB_PORT') ?: getenv('TIDB_PORT') ?: 3306);
+$di_hosting = getenv('DB_HOST') || getenv('TIDB_HOST');
 
+mysqli_report(MYSQLI_REPORT_OFF);
 $conn = mysqli_init();
-if (getenv('DB_SSL')) {
-    mysqli_ssl_set($conn, null, null, null, null, null);
+if ($di_hosting && $db_host != 'localhost') {
     mysqli_real_connect($conn, $db_host, $db_user, $db_pass, $db_nama, $db_port, null, MYSQLI_CLIENT_SSL);
 } else {
     mysqli_real_connect($conn, $db_host, $db_user, $db_pass, $db_nama, $db_port);
 }
 if (mysqli_connect_errno()) {
-    $conn = false;
-}
-if (!$conn) {
     die('Koneksi database gagal. Pastikan MySQL menyala dan database.sql sudah diimport.');
 }
 mysqli_set_charset($conn, 'utf8mb4');
 
-// Di hosting (DB_HOST diisi) session disimpan di database, di lokal tetap bawaan PHP
-if (getenv('DB_HOST')) {
+// Di hosting session disimpan di database, di lokal tetap bawaan PHP
+if ($di_hosting) {
     require __DIR__ . '/session_db.php';
 }
 session_start();
