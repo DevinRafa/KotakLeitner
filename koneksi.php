@@ -42,3 +42,22 @@ function nama_depan($nama) {
     $bagian = explode(' ', trim($nama));
     return $bagian[0];
 }
+
+// Kartu deck (dipakai di dashboard dan halaman deck)
+// $d berisi: id, nama, deskripsi, warna, karakter, total, ulang
+function kartu_deck($d) {
+    $h  = '<a class="card hov deckcard" href="kartu.php?deck=' . (int)$d['id'] . '">';
+    $h .= '<div class="cv cv-' . (int)$d['warna'] . ' hasch"><img class="cvchar" src="assets/img/' . e($d['karakter']) . '.svg" height="96" alt=""></div>';
+    $h .= '<div><h4>' . e($d['nama']) . '</h4>';
+    if ($d['deskripsi'] != '') {
+        $h .= '<p class="muted" style="font-size:15px">' . e($d['deskripsi']) . '</p>';
+    }
+    $h .= '</div><div class="row"><span class="chip">' . (int)$d['total'] . ' kartu</span>';
+    if ((int)$d['ulang'] > 0) {
+        $h .= '<span class="chip warm">' . (int)$d['ulang'] . ' perlu diulang</span>';
+    } else {
+        $h .= '<span class="chip ok">Aman hari ini</span>';
+    }
+    $h .= '</div></a>';
+    return $h;
+}
