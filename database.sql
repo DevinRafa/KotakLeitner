@@ -15,7 +15,7 @@ CREATE TABLE users (
   username VARCHAR(30) NOT NULL UNIQUE,
   password VARCHAR(32) NOT NULL,
   avatar VARCHAR(20) NOT NULL DEFAULT 'kucing',
-  dibuat DATE NOT NULL
+  dibuat TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE deck (
@@ -39,8 +39,8 @@ CREATE TABLE kartu (
 );
 
 -- Akun contoh: username "demo", password "demo123"
-INSERT INTO users (nama, username, password, avatar, dibuat)
-VALUES ('Akun Demo', 'demo', MD5('demo123'), 'kucing', CURDATE());
+INSERT INTO users (nama, username, password, avatar)
+VALUES ('Akun Demo', 'demo', MD5('demo123'), 'kucing');
 
 INSERT INTO deck (user_id, nama, deskripsi, warna, karakter) VALUES
 (1, 'Kosakata Inggris', 'Kata-kata dasar bahasa Inggris sehari-hari', 1, 'kucing'),
