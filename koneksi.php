@@ -1,6 +1,5 @@
 <?php
 // Koneksi database + fungsi bantu yang dipakai semua halaman
-session_start();
 
 // Pengaturan database: di komputer lokal memakai nilai bawaan, di hosting dibaca dari environment variable
 $db_host = getenv('DB_HOST') ?: 'localhost';
@@ -23,6 +22,12 @@ if (!$conn) {
     die('Koneksi database gagal. Pastikan MySQL menyala dan database.sql sudah diimport.');
 }
 mysqli_set_charset($conn, 'utf8mb4');
+
+// Di hosting (DB_HOST diisi) session disimpan di database, di lokal tetap bawaan PHP
+if (getenv('DB_HOST')) {
+    require __DIR__ . '/session_db.php';
+}
+session_start();
 
 // Interval pengulangan tiap kotak (hari)
 $INTERVAL = [1 => 1, 2 => 2, 3 => 4, 4 => 7, 5 => 14];
