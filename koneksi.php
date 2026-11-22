@@ -2,7 +2,23 @@
 // Koneksi database + fungsi bantu yang dipakai semua halaman
 session_start();
 
-$conn = mysqli_connect('localhost', 'root', '', 'kotakleitner');
+// Pengaturan database: di komputer lokal memakai nilai bawaan, di hosting dibaca dari environment variable
+$db_host = getenv('DB_HOST') ?: 'localhost';
+$db_user = getenv('DB_USER') ?: 'root';
+$db_pass = getenv('DB_PASS') ?: '';
+$db_nama = getenv('DB_NAME') ?: 'kotakleitner';
+$db_port = (int) (getenv('DB_PORT') ?: 3306);
+
+$conn = mysqli_init();
+if (getenv('DB_SSL')) {
+    mysqli_ssl_set($conn, null, null, null, null, null);
+    mysqli_real_connect($conn, $db_host, $db_user, $db_pass, $db_nama, $db_port, null, MYSQLI_CLIENT_SSL);
+} else {
+    mysqli_real_connect($conn, $db_host, $db_user, $db_pass, $db_nama, $db_port);
+}
+if (mysqli_connect_errno()) {
+    $conn = false;
+}
 if (!$conn) {
     die('Koneksi database gagal. Pastikan MySQL menyala dan database.sql sudah diimport.');
 }
