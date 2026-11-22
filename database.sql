@@ -8,6 +8,7 @@ USE kotakleitner;
 DROP TABLE IF EXISTS kartu;
 DROP TABLE IF EXISTS deck;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS sesi;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -36,6 +37,13 @@ CREATE TABLE kartu (
   kotak TINYINT NOT NULL DEFAULT 1,
   jadwal DATE NOT NULL,
   FOREIGN KEY (deck_id) REFERENCES deck(id) ON DELETE CASCADE
+);
+
+-- Dipakai hanya saat di-hosting (lihat session_db.php); di XAMPP boleh diabaikan
+CREATE TABLE sesi (
+  id VARCHAR(128) PRIMARY KEY,
+  data TEXT NOT NULL,
+  diperbarui TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Akun contoh: username "demo", password "demo123"
