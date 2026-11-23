@@ -124,8 +124,19 @@ include 'header.php';
       </div>
       <p class="muted">Kartu yang salah kembali ke Kotak 1 dan muncul lagi besok.</p>
     <?php else: ?>
-      <h2>Tidak ada kartu untuk diulang</h2>
-      <p class="muted">Semua kartu sudah aman hari ini. Kembali lagi besok, atau tambah kartu baru.</p>
+      <?php
+      // Jadwal terdekat kartu berikutnya (semua kartu yang jatuh tempo sudah dijawab)
+      $q = mysqli_query($conn, "SELECT MIN(k.jadwal) AS berikutnya FROM kartu k JOIN deck d ON k.deck_id = d.id WHERE d.user_id=$uid $syarat_deck");
+      $berikutnya = mysqli_fetch_assoc($q)['berikutnya'];
+      ?>
+      <?php if ($berikutnya): ?>
+        <h2>Semua kartu hari ini sudah beres!</h2>
+        <p class="muted">Hebat, kamu konsisten. Istirahat dulu, besok kita lanjut lagi.</p>
+        <span class="chip">Sesi berikutnya: <b><?= e(date('d/m/Y', strtotime($berikutnya))) ?></b></span>
+      <?php else: ?>
+        <h2>Belum ada kartu untuk dipelajari</h2>
+        <p class="muted">Tambahkan kartu ke deck-mu dulu, lalu mulai belajar.</p>
+      <?php endif; ?>
     <?php endif; ?>
     <div class="row" style="justify-content:center">
       <a class="btn btn-pri" href="progres.php">Lihat progres</a>
