@@ -5,9 +5,7 @@ $root = dirname(__DIR__);
 $file = basename($_GET['f'] ?? 'index.php');
 unset($_GET['f'], $_REQUEST['f']);
 if (substr($file, -4) !== '.php' || !is_file($root . '/' . $file)) {
-    http_response_code(404);
-    echo 'Halaman tidak ditemukan.';
-    exit;
+    $file = '404.php';
 }
 chdir($root);
 require $root . '/' . $file;

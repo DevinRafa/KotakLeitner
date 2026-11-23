@@ -7,6 +7,7 @@
   "routes": [
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "src": "/", "dest": "/api/index.php?f=index.php" },
-    { "src": "/([A-Za-z0-9_]+\\.php)", "dest": "/api/index.php?f=$1" }
+    { "src": "/([A-Za-z0-9_]+\\.php)", "dest": "/api/index.php?f=$1" },
+    { "src": "/(.*)", "status": 404, "dest": "/api/index.php?f=404.php" }
   ]
 }
